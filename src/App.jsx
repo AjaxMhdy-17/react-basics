@@ -1,5 +1,4 @@
-
-import '../src/index.css'; 
+import "../src/index.css";
 
 const pizzaData = [
   {
@@ -48,38 +47,59 @@ const pizzaData = [
 
 function App() {
   return (
-    <>
-      <Header/>
-      <Menu/>
-      <Footer/>
-    </>
+    <div className="container">
+      <Header />
+      <Menu />
+      <Footer />
+    </div>
   );
 }
 
-
-function Header(){
-  return <h1>Fast React Pizza Company.</h1>
+function Header() {
+  return (
+    <header className="header">
+      <h1>Fast React Pizza Company.</h1>
+    </header>
+  );
 }
 
-function Footer(){
-  return <footer>{new Date().toLocaleTimeString()} We Are Currenly Open</footer>
+function Footer() {
+  // console.log('foo');
+
+  const hour = new Date().getHours();
+  const openHour = 12;
+  const closeHour = 22;
+
+  if (hour >= openHour && hour <= closeHour) {
+    console.log("We Are Currently Open");
+  } else {
+    console.log("Not Opened");
+  }
+
+  return (
+    <footer>{new Date().toLocaleTimeString()} We Are Currenly Open</footer>
+  );
 }
 
-function Menu(){
-  return <div>
-    <h3>Our Menu</h3>
-    <Pizza />
-    <Pizza />
-    <Pizza />
-  </div>
+function Menu() {
+  return (
+    <main className="menu">
+      <h2>Our Menu</h2>
+      <Pizza />
+      <Pizza />
+      <Pizza />
+    </main>
+  );
 }
 
 function Pizza() {
-  return <div>
-    <img src="pizzas/salamino.jpg" alt="pizza-photo" />
-    <h2>Lorem ipsum dolor sit.</h2>
-    <p>description Lorem ipsum dolor sit amet.</p>
-  </div>;
+  return (
+    <div>
+      <img src="pizzas/salamino.jpg" alt="pizza-photo" />
+      <h3>Lorem ipsum dolor sit.</h3>
+      <p>description Lorem ipsum dolor sit amet.</p>
+    </div>
+  );
 }
 
 export default App;

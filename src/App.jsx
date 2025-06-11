@@ -1,99 +1,61 @@
+import { useState } from "react";
 import "../src/App.css";
 
-const skills = [
-  {
-    skill: "HTML+CSS",
-    level: "advanced",
-    color: "#2662EA",
-  },
-  {
-    skill: "JavaScript",
-    level: "advanced",
-    color: "#EFD81D",
-  },
-  {
-    skill: "Web Design",
-    level: "advanced",
-    color: "#C3DCAF",
-  },
-  {
-    skill: "Git and GitHub",
-    level: "intermediate",
-    color: "#E84F33",
-  },
-  {
-    skill: "React",
-    level: "advanced",
-    color: "#60DAFB",
-  },
-  {
-    skill: "Svelte",
-    level: "beginner",
-    color: "#FF3B00",
-  },
+const messages = [
+  "Learn React ⚛️",
+  "Apply for jobs 💼",
+  "Invest your new income 🤑",
 ];
 
 function App() {
-  return (
-    <div className="card">
-      <Avatar />
-      <div className="data">
-        <Intro />
-        <SkillSet />
-      </div>
-    </div>
-  );
-}
+  const [step, setStep] = useState(1);
+  const [test, setTest] = useState({ name: "Jonas" });
+  const [isOpen, setIsOpen] = useState(true);
 
-function Avatar() {
-  const style = {
-    width: "100%",
-    height: "200px",
-    objectFit: "cover",
+  const next = () => {
+    if (step < 3) setStep((step) => step + 1);
+    setTest({ name: "Hasan" });
   };
-  return <img src="pizzas/spinaci.jpg" style={style} alt="img" />;
-}
 
-function Intro() {
-  return (
-    <div>
-      <h1>Jonas Schmedtmann</h1>
-      <p>
-        Full-stack web developer and teacher at Udemy. When not coding or
-        preparing a course, I like to play board games, to cook (and eat), or to
-        just enjoy the Portuguese sun at the beach.
-      </p>
-    </div>
-  );
-}
-
-function SkillSet() {
-  return (
-    <div className="skill-list">
-      {skills.map((skill) => (
-        <Skill
-          key={skill.skill}
-          skill={skill.skill}
-          color={skill.color}
-          level={skill.level}
-        />
-      ))}
-    </div>
-  );
-}
-
-function Skill({ skill, color, level }) {
-  console.log(color);
+  const prev = () => {
+    if (step > 1) setStep((step) => step - 1);
+    setTest({ name: "Jonas" });
+  };
 
   return (
-    <div className="skill" style={{ backgroundColor: color }}>
-      <span>{skill}</span>
-      <span>
-        {level === "beginner" && "👶"}
-        {level === "intermediate" && "👍"}
-        {level === "advanced" && "💪"}
-      </span>
-    </div>
+    <>
+      <button className="close" onClick={() => setIsOpen(!isOpen)}>
+        &times;
+      </button>
+      {isOpen && (
+        <div className="steps">
+          <div className="numbers">
+            <div className={`${step >= 1 ? "active" : ""}`}>1</div>
+            <div className={`${step >= 2 ? "active" : ""}`}>2</div>
+            <div className={`${step >= 3 ? "active" : ""}`}>3</div>
+          </div>
+
+          <p className="message">
+            {messages[step - 1]} {test.name}
+          </p>
+
+          <div className="buttons">
+            <button
+              onClick={prev}
+              style={{ backgroundColor: "#7950f2", color: "#fff" }}
+            >
+              Previous
+            </button>
+            <button
+              onClick={next}
+              style={{ backgroundColor: "#7950f2", color: "#fff" }}
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 

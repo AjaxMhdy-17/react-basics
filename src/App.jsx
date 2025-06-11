@@ -69,47 +69,58 @@ function Footer() {
   const hour = new Date().getHours();
   const openHour = 12;
   const closeHour = 22;
-
-  if (hour >= openHour && hour <= closeHour) {
-    console.log("We Are Currently Open");
-  } else {
-    console.log("Not Opened");
-  }
+  const isOpen = hour >= openHour && hour <= closeHour;
+  // let status = isOpen ? "We Are Currently Open" : "Not Open";
+  let status = isOpen && (
+    <div className="order">
+      <p>
+        We Are Open Till {closeHour}:00 , Come visite us or Order Online
+      </p>
+      <p><button className="btn">Order</button></p>
+    </div>
+  );
 
   return (
-    <footer>{new Date().toLocaleTimeString()} We Are Currenly Open</footer>
+    <footer>
+      Current time : {new Date().toLocaleTimeString()} {status}
+    </footer>
   );
 }
 
 function Menu() {
+
+
+  // const pizzaData = [] ; 
+  // const pizzaData = [] ; 
+  const numPizzas = pizzaData.length ; 
+
   return (
     <main className="menu">
       <h2>Our Menu</h2>
-      <Pizza
-        src="pizzas/salamino.jpg"
-        name="Pizza Salamino"
-        ingredients="Tomato, mozarella, and pepperoni"
-        price="15"
-      />
-      <Pizza
-        src="pizzas/prosciutto.jpg"
-        name="Pizza Prosciutto"
-        ingredients="Tomato, mozarella, ham, aragula, and burrata cheese"
-        price="18"
-      />
+      <ul className="pizzas">
+        {numPizzas > 0 && pizzaData.map((pizza) => (
+          <Pizza
+            src={pizza.photoName}
+            name={pizza.name}
+            ingredients={pizza.ingredients}
+            price={pizza.price}
+          />
+        ))}
+      </ul>
     </main>
   );
 }
 
 function Pizza(props) {
-  console.log(props);
-
   return (
-    <div>
+    <li className="pizza">
       <img src={props.src} alt={props.name} />
-      <h3>{props.name}</h3>
-      <p>{props.ingredients}</p>
-    </div>
+      <div>
+        <h3>{props.name}</h3>
+        <p>{props.ingredients}</p>
+        <span>{props.price}</span>
+      </div>
+    </li>
   );
 }
 

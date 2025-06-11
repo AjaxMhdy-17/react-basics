@@ -1,136 +1,99 @@
-import "../src/index.css";
+import "../src/App.css";
 
-const pizzaData = [
+const skills = [
   {
-    name: "Focaccia",
-    ingredients: "Bread with italian olive oil and rosemary",
-    price: 6,
-    photoName: "pizzas/focaccia.jpg",
-    soldOut: false,
+    skill: "HTML+CSS",
+    level: "advanced",
+    color: "#2662EA",
   },
   {
-    name: "Pizza Margherita",
-    ingredients: "Tomato and mozarella",
-    price: 10,
-    photoName: "pizzas/margherita.jpg",
-    soldOut: false,
+    skill: "JavaScript",
+    level: "advanced",
+    color: "#EFD81D",
   },
   {
-    name: "Pizza Spinaci",
-    ingredients: "Tomato, mozarella, spinach, and ricotta cheese",
-    price: 12,
-    photoName: "pizzas/spinaci.jpg",
-    soldOut: false,
+    skill: "Web Design",
+    level: "advanced",
+    color: "#C3DCAF",
   },
   {
-    name: "Pizza Funghi",
-    ingredients: "Tomato, mozarella, mushrooms, and onion",
-    price: 12,
-    photoName: "pizzas/funghi.jpg",
-    soldOut: false,
+    skill: "Git and GitHub",
+    level: "intermediate",
+    color: "#E84F33",
   },
   {
-    name: "Pizza Salamino",
-    ingredients: "Tomato, mozarella, and pepperoni",
-    price: 15,
-    photoName: "pizzas/salamino.jpg",
-    soldOut: true,
+    skill: "React",
+    level: "advanced",
+    color: "#60DAFB",
   },
   {
-    name: "Pizza Prosciutto",
-    ingredients: "Tomato, mozarella, ham, aragula, and burrata cheese",
-    price: 18,
-    photoName: "pizzas/prosciutto.jpg",
-    soldOut: false,
+    skill: "Svelte",
+    level: "beginner",
+    color: "#FF3B00",
   },
 ];
 
 function App() {
   return (
-    <div className="container">
-      <Header />
-      <Menu />
-      <Footer />
-    </div>
-  );
-}
-
-function Header() {
-  return (
-    <header className="header">
-      <h1>Fast React Pizza Company.</h1>
-    </header>
-  );
-}
-
-function Footer() {
-  // console.log('foo');
-
-  const hour = new Date().getHours();
-  const openHour = 12;
-  const closeHour = 22;
-  const isOpen = hour >= openHour && hour <= closeHour;
-  // let status = isOpen ? "We Are Currently Open" : "Not Open";
-
-  return (
-    <footer>
-      Current time : {new Date().toLocaleTimeString()}{" "}
-      <Order isOpen={isOpen} openHour={openHour} closeHour={closeHour} />
-    </footer>
-  );
-}
-
-function Order({ isOpen, closeHour, openHour }) {
-  return isOpen ? (
-    <div className="order">
-      <p>We Are Open Till {closeHour}:00 , Come visite us or Order Online</p>
-      <p>
-        <button className="btn">Order</button>
-      </p>
-    </div>
-  ) : (
-    <div>
-      <p>
-        We Are happy to welcome you between {openHour}:00 and {closeHour}
-      </p>
-    </div>
-  );
-}
-
-function Menu() {
-  // const pizzaData = [];
-  const numPizzas = pizzaData.length;
-
-  return (
-    <main className="menu">
-      <h2>Our Menu</h2>
-      <ul className="pizzas">
-        {numPizzas > 0
-          ? pizzaData.map((pizza) => (
-              <Pizza
-                key={pizza.name}
-                src={pizza.photoName}
-                name={pizza.name}
-                ingredients={pizza.ingredients}
-                price={pizza.price}
-              />
-            ))
-          : "No Item Added"}
-      </ul>
-    </main>
-  );
-}
-
-function Pizza(props) {
-  return (
-    <li className="pizza">
-      <img src={props.src} alt={props.name} />
-      <div>
-        <h3>{props.name}</h3>
-        <p>{props.ingredients}</p>
-        <span>{props.price}</span>
+    <div className="card">
+      <Avatar />
+      <div className="data">
+        <Intro />
+        <SkillSet />
       </div>
-    </li>
+    </div>
+  );
+}
+
+function Avatar() {
+  const style = {
+    width: "100%",
+    height: "200px",
+    objectFit: "cover",
+  };
+  return <img src="pizzas/spinaci.jpg" style={style} alt="img" />;
+}
+
+function Intro() {
+  return (
+    <div>
+      <h1>Jonas Schmedtmann</h1>
+      <p>
+        Full-stack web developer and teacher at Udemy. When not coding or
+        preparing a course, I like to play board games, to cook (and eat), or to
+        just enjoy the Portuguese sun at the beach.
+      </p>
+    </div>
+  );
+}
+
+function SkillSet() {
+  return (
+    <div className="skill-list">
+      {skills.map((skill) => (
+        <Skill
+          key={skill.skill}
+          skill={skill.skill}
+          color={skill.color}
+          level={skill.level}
+        />
+      ))}
+    </div>
+  );
+}
+
+function Skill({ skill, color, level }) {
+  console.log(color);
+
+  return (
+    <div className="skill" style={{ backgroundColor: color }}>
+      <span>{skill}</span>
+      <span>
+        {level === "beginner" && "👶"}
+        {level === "intermediate" && "👍"}
+        {level === "advanced" && "💪"}
+      </span>
+    </div>
   );
 }
 

@@ -71,41 +71,51 @@ function Footer() {
   const closeHour = 22;
   const isOpen = hour >= openHour && hour <= closeHour;
   // let status = isOpen ? "We Are Currently Open" : "Not Open";
-  let status = isOpen && (
-    <div className="order">
-      <p>
-        We Are Open Till {closeHour}:00 , Come visite us or Order Online
-      </p>
-      <p><button className="btn">Order</button></p>
-    </div>
-  );
 
   return (
     <footer>
-      Current time : {new Date().toLocaleTimeString()} {status}
+      Current time : {new Date().toLocaleTimeString()}{" "}
+      <Order isOpen={isOpen} openHour={openHour} closeHour={closeHour} />
     </footer>
   );
 }
 
+function Order({ isOpen, closeHour, openHour }) {
+  return isOpen ? (
+    <div className="order">
+      <p>We Are Open Till {closeHour}:00 , Come visite us or Order Online</p>
+      <p>
+        <button className="btn">Order</button>
+      </p>
+    </div>
+  ) : (
+    <div>
+      <p>
+        We Are happy to welcome you between {openHour}:00 and {closeHour}
+      </p>
+    </div>
+  );
+}
+
 function Menu() {
-
-
-  // const pizzaData = [] ; 
-  // const pizzaData = [] ; 
-  const numPizzas = pizzaData.length ; 
+  // const pizzaData = [];
+  const numPizzas = pizzaData.length;
 
   return (
     <main className="menu">
       <h2>Our Menu</h2>
       <ul className="pizzas">
-        {numPizzas > 0 && pizzaData.map((pizza) => (
-          <Pizza
-            src={pizza.photoName}
-            name={pizza.name}
-            ingredients={pizza.ingredients}
-            price={pizza.price}
-          />
-        ))}
+        {numPizzas > 0
+          ? pizzaData.map((pizza) => (
+              <Pizza
+                key={pizza.name}
+                src={pizza.photoName}
+                name={pizza.name}
+                ingredients={pizza.ingredients}
+                price={pizza.price}
+              />
+            ))
+          : "No Item Added"}
       </ul>
     </main>
   );

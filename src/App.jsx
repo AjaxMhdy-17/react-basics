@@ -1,69 +1,120 @@
 import { useState } from "react";
-import "../src/App.css";
+import "./App.css";
 
-const questions = [
-  {
-    id: 3457,
-    question: "What language is React based on?",
-    answer: "JavaScript",
-  },
-  {
-    id: 7336,
-    question: "What are the building blocks of React apps?",
-    answer: "Components",
-  },
-  {
-    id: 8832,
-    question: "What's the name of the syntax we use to describe a UI in React?",
-    answer: "JSX",
-  },
-  {
-    id: 1297,
-    question: "How to pass data from parent to child components?",
-    answer: "Props",
-  },
-  {
-    id: 9103,
-    question: "How to give components memory?",
-    answer: "useState hook",
-  },
-  {
-    id: 2002,
-    question:
-      "What do we call an input element that is completely synchronised with state?",
-    answer: "Controlled element",
-  },
-];
-
-function App() {
+export default function App() {
   return (
     <div className="App">
-      <FlashCards />
+      <Counter />
     </div>
   );
 }
 
-function FlashCards() {
-  const [selectId, setSelectId] = useState(null);
+function Counter() {
+  const [count, setCount] = useState(0);
+  const [step, setStep] = useState(1);
 
-  const handleSelectedId = (id) => {    
-    setSelectId(id === selectId ? null : id);
-  }
+  const date = new Date("june 21 2027");
+  date.setDate(date.getDate() + count);
+
+  const handleDate = (value) => {
+    setCount(value);
+  };
+
+  const handleReset = () => {
+    setCount(0);
+    setStep(1);
+    console.log("hey");
+  };
 
   return (
-    <div className="flashcards">
-      {questions.map((question) => (
-        <div
-          key={question.id}
-          className={selectId == question.id ? "selected" : ""}
-          onClick={() => handleSelectedId(question.id)}
-        >
+    <div>
+      <div>
+        <input
+          type="range"
+          min={0}
+          max={10}
+          value={step}
+          onChange={(e) => setStep(Number(e.target.value))}
+        />
+        <span>Step : {step}</span>
+      </div>
 
-          <p>{selectId == question.id ? question.answer : question.question}</p>
-        </div>
-      ))}
+      <div>
+        <button onClick={() => setCount((count) => count - step)}>-</button>
+        <input
+          type="text"
+          value={count}
+          onChange={(e) => handleDate(Number(e.target.value))}
+        />
+        <button onClick={() => setCount((count) => count + step)}>+</button>
+      </div>
+      <div>
+        {count == 0
+          ? "Today is : "
+          : count > 0
+          ? `${count} days from today `
+          : `${Math.abs(count)} days ago was `}
+        <span>{date.toDateString()}</span>
+      </div>
+
+      <div>
+          {count !==  0 &&  <button onClick={handleReset}>reset</button>}
+      </div>
     </div>
   );
 }
 
-export default App;
+// function Counter() {
+//   const [count, setCount] = useState(0);
+//   const [step, setStep] = useState(1);
+
+//   function handleReset() {
+//     setCount(0);
+//     setStep(1);
+//   }
+
+//   const date = new Date("june 21 2027");
+//   date.setDate(date.getDate() + count);
+
+//   return (
+//     <div>
+//       <div>
+//         <input
+//           type="range"
+//           min="0"
+//           max="10"
+//           value={step}
+//           onChange={(e) => setStep(Number(e.target.value))}
+//         />
+//         <span>Step: {step}</span>
+//       </div>
+
+//       <div>
+//         <button onClick={() => setCount((c) => c - step)}>-</button>
+//         <input
+//           type="text"
+//           value={count}
+//           onChange={(e) => setCount(Number(e.target.value))}
+//         />
+//         <button onClick={() => setCount((c) => c + step)}>+</button>
+//       </div>
+
+//       <p>
+//         <span>
+//           {count === 0
+//             ? "Today is "
+//             : count > 0
+//             ? `${count} days from today is `
+//             : `${Math.abs(count)} days ago was `}
+//         </span>
+//         <span>{date.toDateString()}</span>
+//       </p>
+
+//       {count !== 0 || step !== 1 ? (
+//         <div>
+//           <button onClick={handleReset}>Reset</button>
+//         </div>
+//       ) : null}
+//     </div>
+//   );
+// }

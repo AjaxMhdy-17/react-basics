@@ -1,120 +1,179 @@
 import { useState } from "react";
-import "./App.css";
+import "../src/App.css";
 
-export default function App() {
+const initialItems = [
+  { id: 1, description: "Passports", quantity: 2, packed: false },
+  { id: 2, description: "Socks", quantity: 12, packed: false },
+  { id: 3, description: "Charger", quantity: 10, packed: false },
+];
+
+function App() {
+  const [items, setItems] = useState([]);
+
+  const handleAddItems = (item) => {
+    setItems((items) => [...items, item]);
+  };
+
+  const handleCheck = (id) => {
+    const checkedItems = items.map((item) =>
+      item.id == id ? { ...item, packed: !item.packed } : item
+    );
+    setItems(checkedItems);
+  };
+
+  const handleClearItem = () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete all items"
+    );
+    if (confirmed) setItems((items) => (items = []));
+  };
+
+  const handleDelete = (id) => {
+    const newItems = items.filter((item) => item.id !== id);
+    setItems(newItems);
+  };
+
   return (
-    <div className="App">
-      <Counter />
+    <main className="app">
+      <Logo />
+      <Form handleAddItems={handleAddItems} />
+      <PackingList
+        items={items}
+        handleDelete={handleDelete}
+        handleCheck={handleCheck}
+        handleClearItem={handleClearItem}
+      />
+      <Stats items={items} />
+    </main>
+  );
+}
+
+function Logo() {
+  return <h1>Far Away</h1>;
+}
+function Form({ handleAddItems }) {
+  const [quantity, setQuantity] = useState("");
+  const [description, setDescription] = useState("");
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!description) return;
+    const newItem = {
+      id: Date.now(),
+      description: description,
+      quantity: quantity,
+      packed: false,
+    };
+    handleAddItems(newItem);
+    setQuantity("");
+    setDescription("");
+  };
+
+  return (
+    <form className="add-form" onSubmit={handleSubmit}>
+      <h3>What do you need for your trip ?</h3>
+      <select value={quantity} onChange={(e) => setQuantity(e.target.value)}>
+        {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
+          <option value={num} key={num}>
+            {num}
+          </option>
+        ))}
+      </select>
+      <input
+        type="text"
+        placeholder="Item..."
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+      />
+      <button>Add</button>
+    </form>
+  );
+}
+
+function PackingList({ items, handleDelete, handleCheck, handleClearItem }) {
+  const [sortBy, setSortBy] = useState("input");
+
+  let sortedItems;
+
+  if (sortBy == "input") sortedItems = items;
+  if (sortBy == "description")
+    sortedItems = items
+      .slice()
+      .sort((a, b) => a.description.localeCompare(b.description));
+
+  if (sortBy == "packed")
+    sortedItems = items
+      .slice()
+      .sort((a, b) => Number(a.packed) - Number(b.packed));
+
+  return (
+    <div className="list">
+      <ul>
+        {sortedItems.map((item) => (
+          <Item
+            key={item.id}
+            item={item}
+            handleDelete={handleDelete}
+            handleCheck={handleCheck}
+          />
+        ))}
+      </ul>
+
+      <div className="actions">
+        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+          <option value="input">Sort by input order</option>
+          <option value="description">Sort by description</option>
+          <option value="packed">Sort by packed status</option>
+        </select>
+        <button onClick={handleClearItem}>clear list</button>
+      </div>
+      <div></div>
     </div>
   );
 }
 
-function Counter() {
-  const [count, setCount] = useState(0);
-  const [step, setStep] = useState(1);
-
-  const date = new Date("june 21 2027");
-  date.setDate(date.getDate() + count);
-
-  const handleDate = (value) => {
-    setCount(value);
-  };
-
-  const handleReset = () => {
-    setCount(0);
-    setStep(1);
-    console.log("hey");
-  };
-
+function Item({ item, handleDelete, handleCheck }) {
+  const line = { textDecoration: "line-through" };
   return (
-    <div>
-      <div>
-        <input
-          type="range"
-          min={0}
-          max={10}
-          value={step}
-          onChange={(e) => setStep(Number(e.target.value))}
-        />
-        <span>Step : {step}</span>
-      </div>
-
-      <div>
-        <button onClick={() => setCount((count) => count - step)}>-</button>
-        <input
-          type="text"
-          value={count}
-          onChange={(e) => handleDate(Number(e.target.value))}
-        />
-        <button onClick={() => setCount((count) => count + step)}>+</button>
-      </div>
-      <div>
-        {count == 0
-          ? "Today is : "
-          : count > 0
-          ? `${count} days from today `
-          : `${Math.abs(count)} days ago was `}
-        <span>{date.toDateString()}</span>
-      </div>
-
-      <div>
-          {count !==  0 &&  <button onClick={handleReset}>reset</button>}
-      </div>
-    </div>
+    <li>
+      {/* <span style={item.packed == true ?  line : {}}>{item.quantity} {item.description}</span> */}
+      <input
+        type="checkbox"
+        value={item.packed}
+        onClick={() => handleCheck(item.id)}
+      />
+      <span className={item.packed == true ? "line" : ""}>
+        {item.quantity} {item.description}
+      </span>
+      <button onClick={() => handleDelete(item.id)}>x</button>
+    </li>
   );
 }
 
-// function Counter() {
-//   const [count, setCount] = useState(0);
-//   const [step, setStep] = useState(1);
+function Stats({ items }) {
+  if (!items.length) {
+    return (
+      <p className="stats">
+        <em>Start adding some items to your packing list</em>
+      </p>
+    );
+  }
 
-//   function handleReset() {
-//     setCount(0);
-//     setStep(1);
-//   }
+  const list = items.length;
+  const packed = items.filter((item) => item.packed == true).length;
+  const percentage = Math.round((packed / list) * 100);
 
-//   const date = new Date("june 21 2027");
-//   date.setDate(date.getDate() + count);
+  return (
+    <footer className="stats">
+      <em>
+        {percentage === 100
+          ? "You have got everything to go."
+          : `
+          You have ${list} items on your list, and you already packed (${percentage}%)
+        `}
+      </em>
+    </footer>
+  );
+}
 
-//   return (
-//     <div>
-//       <div>
-//         <input
-//           type="range"
-//           min="0"
-//           max="10"
-//           value={step}
-//           onChange={(e) => setStep(Number(e.target.value))}
-//         />
-//         <span>Step: {step}</span>
-//       </div>
-
-//       <div>
-//         <button onClick={() => setCount((c) => c - step)}>-</button>
-//         <input
-//           type="text"
-//           value={count}
-//           onChange={(e) => setCount(Number(e.target.value))}
-//         />
-//         <button onClick={() => setCount((c) => c + step)}>+</button>
-//       </div>
-
-//       <p>
-//         <span>
-//           {count === 0
-//             ? "Today is "
-//             : count > 0
-//             ? `${count} days from today is `
-//             : `${Math.abs(count)} days ago was `}
-//         </span>
-//         <span>{date.toDateString()}</span>
-//       </p>
-
-//       {count !== 0 || step !== 1 ? (
-//         <div>
-//           <button onClick={handleReset}>Reset</button>
-//         </div>
-//       ) : null}
-//     </div>
-//   );
-// }
+export default App;

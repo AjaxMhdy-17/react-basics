@@ -17,7 +17,6 @@ const faqs = [
 ];
 
 function App() {
-
   return (
     <main className="app">
       <Accordion data={faqs} />
@@ -41,12 +40,18 @@ function Accordion({ data }) {
 }
 
 function AccordionItem({ title, text, num }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleIsOpen = () => {
+    setIsOpen((open) => !open);
+  };
+
   return (
-    <div className="item">
-      <p>{num}</p>
+    <div className={`item ${isOpen && 'open'}`} onClick={toggleIsOpen}>
+      <p className="number">{num <= 9 ? `0${num + 1}` : num}</p>
       <p className="title">{title}</p>
-      <p className="icon">+</p>
-      <div className="content-box">{text}</div>
+      <p className="icon">{isOpen ? '-' : '+'}</p>
+      {isOpen && <div className="content-box">{text}</div>}
     </div>
   );
 }

@@ -17,6 +17,7 @@ const TipCalculator = () => {
   const tip1 = bill * (percentage1 / 100);
   const tip2 = bill * (percentage2 / 100);
   const tip = (tip1 + tip2) / 2;
+  
 
   const setReset = () => {
     setBill("");
@@ -28,35 +29,34 @@ const TipCalculator = () => {
     <div>
       <BillInput bill={bill} setBill={setBill} />
 
-      <div>
-        <label>How much was the bill?</label>
-        <select
-          value={percentage1}
-          onChange={(e) => setPercentage1(e.target.value)}
-        >
-          <option value="0">Dissatisfied (0%)</option>
-          <option value="5">It was okay (5%)</option>
-          <option value="10">It was good (10%)</option>
-          <option value="20">Absolutely amazing! (20%)</option>
-        </select>
-      </div>
+      <Select percentage={percentage1} setPercentage={setPercentage1}>
+        How much was the bill?
+      </Select>
 
-      <div>
-        <label>How did your friend like the service?</label>
-        <select
-          value={percentage2}
-          onChange={(e) => setPercentage2(e.target.value)}
-        >
-          <option value="0">Dissatisfied (0%)</option>
-          <option value="5">It was okay (5%)</option>
-          <option value="10">It was good (10%)</option>
-          <option value="20">Absolutely amazing! (20%)</option>
-        </select>
-      </div>
+      <Select percentage={percentage2} setPercentage={setPercentage2}>
+        How did your friend like the service?
+      </Select>
 
       <div style={{ marginTop: "20px" }}>
         {bill > 0 && <Output bill={bill} tip={tip} setReset={setReset} />}
       </div>
+    </div>
+  );
+};
+
+const Select = ({ children, percentage, setPercentage }) => {
+  return (
+    <div>
+      <label>{children}</label>
+      <select
+        value={percentage}
+        onChange={(e) => setPercentage(e.target.value)}
+      >
+        <option value="0">Dissatisfied (0%)</option>
+        <option value="5">It was okay (5%)</option>
+        <option value="10">It was good (10%)</option>
+        <option value="20">Absolutely amazing! (20%)</option>
+      </select>{" "}
     </div>
   );
 };

@@ -1,64 +1,95 @@
 import { useState } from "react";
 import "../src/App.css";
 
-const faqs = [
-  {
-    title: "Where are these chairs assembled?",
-    text: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Accusantium, quaerat temporibus quas dolore provident nisi ut aliquid ratione beatae sequi aspernatur veniam repellendus.",
-  },
-  {
-    title: "How long do I have to return my chair?",
-    text: "Pariatur recusandae dignissimos fuga voluptas unde optio nesciunt commodi beatae, explicabo natus.",
-  },
-  {
-    title: "Do you ship to countries outside the EU?",
-    text: "Excepturi velit laborum, perspiciatis nemo perferendis reiciendis aliquam possimus dolor sed! Dolore laborum ducimus veritatis facere molestias!",
-  },
-];
-
 function App() {
   return (
-    <main className="app">
-      <Accordion data={faqs} />
+    <main style={{ textAlign: "center", marginTop: "30px" }}>
+      <TipCalculator />
     </main>
   );
 }
 
-function Accordion({ data }) {
-  const [curOpen, setCurOpen] = useState(null);
+const TipCalculator = () => {
+  const [bill, setBill] = useState(0);
+  const [percentage1, setPercentage1] = useState(0);
+  const [percentage2, setPercentage2] = useState(0);
+
+  const tip1 = bill * (percentage1 / 100);
+  const tip2 = bill * (percentage2 / 100);
+  const tip = (tip1 + tip2) / 2;
+
+  const setReset = () => {
+    setBill("");
+    setPercentage1(0);
+    setPercentage2(0);
+  };
 
   return (
-    <div className="accordion">
-      {data.map((item, idx) => (
-        <AccordionItem
-          key={idx}
-          title={item.title}
-          text={item.text}
-          num={idx}
-          curOpen={curOpen}
-          setCurOpen={setCurOpen}
+    <div>
+      <BillInput bill={bill} setBill={setBill} />
+
+      <div>
+        <label>How much was the bill?</label>
+        <select
+          value={percentage1}
+          onChange={(e) => setPercentage1(e.target.value)}
+        >
+          <option value="0">Dissatisfied (0%)</option>
+          <option value="5">It was okay (5%)</option>
+          <option value="10">It was good (10%)</option>
+          <option value="20">Absolutely amazing! (20%)</option>
+        </select>
+      </div>
+
+      <div>
+        <label>How did your friend like the service?</label>
+        <select
+          value={percentage2}
+          onChange={(e) => setPercentage2(e.target.value)}
+        >
+          <option value="0">Dissatisfied (0%)</option>
+          <option value="5">It was okay (5%)</option>
+          <option value="10">It was good (10%)</option>
+          <option value="20">Absolutely amazing! (20%)</option>
+        </select>
+      </div>
+
+      <div style={{ marginTop: "20px" }}>
+        {bill > 0 && <Output bill={bill} tip={tip} setReset={setReset} />}
+      </div>
+    </div>
+  );
+};
+
+function BillInput({ bill, setBill }) {
+  return (
+    <div>
+      <span>How much the bill ? : </span>
+      <span>
+        <input
+          type="text"
+          placeholder="Bill Value"
+          value={bill}
+          onChange={(e) => setBill(e.target.value)}
         />
-      ))}
+      </span>
     </div>
   );
 }
 
-function AccordionItem({ title, text, num, curOpen , setCurOpen }) {
-
-  const isOpen = num === curOpen;
-  
-  const toggleIsOpen = () => {
-    setCurOpen((isOpen) => isOpen == true ? null : num);
-  };
-
+function Output({ bill, tip, setReset }) {
   return (
-    <div className={`item ${isOpen && "open"}`} onClick={toggleIsOpen}>
-      <p className="number">{num <= 9 ? `0${num + 1}` : num}</p>
-      <p className="title">{title}</p>
-      <p className="icon">{isOpen ? "-" : "+"}</p>
-      {isOpen && <div className="content-box">{text}</div>}
-    </div>
+    <>
+      <h3>
+        You pay {parseFloat(bill) + parseFloat(tip)} ({bill} + {tip} tip)
+      </h3>
+      <Reset setReset={setReset} />
+    </>
   );
+}
+
+function Reset({ setReset }) {
+  return <button onClick={setReset}>Reset</button>;
 }
 
 export default App;

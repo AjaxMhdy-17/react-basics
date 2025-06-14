@@ -17,7 +17,6 @@ const TipCalculator = () => {
   const tip1 = bill * (percentage1 / 100);
   const tip2 = bill * (percentage2 / 100);
   const tip = (tip1 + tip2) / 2;
-  
 
   const setReset = () => {
     setBill("");
